@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Transactions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">xmart</a> &gt; <a href="index.source.html" class="el_package">com.app.xmart.model</a> &gt; <span class="el_source">Transactions.java</span></div><h1>Transactions.java</h1><pre class="source lang-java linenums">package com.app.xmart.model;
+
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = &quot;transaction&quot;)
+<span class="nc" id="L18">@AllArgsConstructor</span>
+<span class="fc" id="L19">@NoArgsConstructor</span>
+<span class="pc bpc" id="L20" title="53 of 54 branches missed.">@Data</span>
+public class Transactions {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;transaction_id&quot;)
+<span class="nc" id="L26">    private Integer transactionId;</span>
+
+    @Column(name = &quot;customer_id&quot;)
+<span class="nc" id="L29">    private Integer customerId;</span>
+
+    @Column(name = &quot;rfid&quot;)
+<span class="nc" id="L32">    private Integer rfid;</span>
+
+    @Column(name = &quot;product_price&quot;)
+<span class="nc" id="L35">    private String productPrice;</span>
+
+    @Column(name = &quot;quantity&quot;)
+<span class="nc" id="L38">    private Integer quantity;</span>
+
+    @Column(name = &quot;transaction_datetime&quot;)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = &quot;dd:MM:yyyy HH:mm:ss&quot;)
+<span class="nc" id="L42">    private LocalDateTime transactionDatetime;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
