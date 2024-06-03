@@ -3,7 +3,8 @@ package com.app.xmart.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.app.xmart.dto.AddProductRequest;
+import com.app.xmart.dto.AddProductResponse;
 import org.springframework.stereotype.Service;
 
 import com.app.xmart.model.Products;
@@ -14,7 +15,6 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class ProductsService {
     
-    @Autowired
     ProductsRepository productsRepository;
 
     public List<Products> findAllProducts(){
@@ -22,17 +22,29 @@ public class ProductsService {
     }
 
     public Optional<Products> findByIdProducts(Integer productId){
+        return productsRepository.findById(productId)
+                .or(() -> {
+                    throw new EntityNotFoundException("Product not found");
+                });
+    }
+
+    public AddProductResponse addProduct(AddProductRequest addProductRequest){
         try{
-            Optional<Products> product = productsRepository.findById(productId);
-            if (product == null) {
-                throw new EntityNotFoundException("Product not found");
-            }
+            Products dataProduct = new Products();
+            dataProduct.setRfid(addProductRequest.getRfid());
+            dataProduct.setProductName(addProductRequest.getProductName());
+            dataProduct.setProductPrice(addProductRequest.getProductPrice());
+            Products savedDataProduct = productsRepository.save(dataProduct);
 
-            return product;
+            AddProductResponse addProductResponse = new AddProductResponse();
+            addProductResponse.setRfid(savedDataProduct.getRfid());
+            addProductResponse.setProductName(savedDataProduct.getProductName());
+            addProductResponse.setProductPrice(savedDataProduct.getProductPrice());
 
-        }catch (Exception e){
+            return addProductResponse;
+        } catch (Exception e){
             throw new EntityNotFoundException(e.getMessage());
-
         }
     }
+
 }
