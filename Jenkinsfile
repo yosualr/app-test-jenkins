@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                checkout scm
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/yosualr/app-test-jenkins']])
                 bat 'mvn clean install'
                 echo 'Git Checkout Completed'
             }
@@ -15,17 +15,20 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    bat 'mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=xmart \
-                        -Dsonar.projectName="xmart" \
-                        -Dsonar.host.url=http://localhost:9000'
+                    bat 'mvn clean package'
+                    bat ''' mvn clean verify sonar:sonar -Dsonar.projectKey=xmart -Dsonar.projectName="xmart" -Dsonar.host.url=http://localhost:9000 '''
                     echo 'SonarQube Analysis Completed'
                 }
             }
         }
-        stage('Quality Gate') {
+        stage("Quality Gate") {
             steps {
-                waitForQualityGate abortPipeline: true
+                script {
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
                 echo 'Quality Gate Completed'
             }
         }
@@ -41,7 +44,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'dockerhub-pw', variable: 'dockerhub-password')]) {
-                        bat 'docker login -u yosualr -p "%dockerhub-password%"'
+                        bat ''' docker login -u yosualr -p "%dockerhub-password%" '''
                     }
                     bat 'docker push yosualr/xmart'
                 }
