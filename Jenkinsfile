@@ -16,7 +16,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     bat 'mvn clean package'
-                    bat ''' mvn clean verify sonar:sonar -Dsonar.projectKey=xmart -Dsonar.projectName="xmart" -Dsonar.host.url=http://localhost:9000 '''
+                    bat '''mvn clean verify sonar:sonar -Dsonar.projectKey=xmart -Dsonar.projectName='xmart' -Dsonar.host.url=http://localhost:9000'''
                     echo 'SonarQube Analysis Completed'
                 }
             }
@@ -24,14 +24,15 @@ pipeline {
         stage("Quality Gate") {
             steps {
                 script {
-                    def qg = waitForQualityGate()
-                    if (qg.status != 'OK') {
-                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    def qualityGate = waitForQualityGate abortPipeline: true, timeOut: '10m'
+                    if (qualityGate.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
                     }
                 }
                 echo 'Quality Gate Completed'
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -40,17 +41,19 @@ pipeline {
                 }
             }
         }
+
         stage('Docker Push') {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'dockerhub-pw', variable: 'dockerhub-password')]) {
-                        bat ''' docker login -u yosualr -p "%dockerhub-password%" '''
+                        bat '''docker login -u yosualr -p "%dockerhub-password%"'''
                     }
                     bat 'docker push yosualr/xmart'
                 }
             }
         }
-        stage('Docker Run') {
+
+        stage ('Docker Run') {
             steps {
                 script {
                     bat 'docker run -d --name xmart -p 8099:8080 yosualr/xmart'
@@ -58,6 +61,7 @@ pipeline {
                 }
             }
         }
+
     }
     post {
         always {
