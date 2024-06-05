@@ -102,4 +102,26 @@ class ProductsServiceTest {
             productsService.addProduct(addProductRequest);
         });
     }
+    @Test
+    void testAddProductRequest_Constructor() {
+        AddProductRequest addProductRequest = new AddProductRequest(12345, "Sample Product", 100);
+
+        assertNotNull(addProductRequest);
+        assertEquals(12345, addProductRequest.getRfid());
+        assertEquals("Sample Product", addProductRequest.getProductName());
+        assertEquals(100, addProductRequest.getProductPrice());
+    }
+
+    @Test
+    void testAddProductRequest_GettersAndSetters() {
+        AddProductRequest addProductRequest = new AddProductRequest();
+        addProductRequest.setRfid(12345);
+        addProductRequest.setProductName("Sample Product");
+        addProductRequest.setProductPrice(100);
+
+        assertEquals(12345, addProductRequest.getRfid());
+        assertEquals("Sample Product", addProductRequest.getProductName());
+        assertEquals(100, addProductRequest.getProductPrice());
+    }
+
 }
