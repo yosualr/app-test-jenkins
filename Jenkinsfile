@@ -51,7 +51,7 @@ pipeline {
         stage ('Docker Run') {
             steps {
                 script {
-                    bat 'docker run -d --name xmart -p 8099:8080 yosualr/xmart'
+                    bat 'docker run -d --name xmart -p 8099:8080 --network="host"  yosualr/xmart'
                     echo 'Docker Run Completed'
                 }
             }
