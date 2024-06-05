@@ -124,4 +124,20 @@ class ProductsServiceTest {
         assertEquals(100, addProductRequest.getProductPrice());
     }
 
+    @Test
+    void testToString() {
+        AddProductRequest addProductRequest = new AddProductRequest(12345, "Sample Product", 100);
+        String expectedToString = "AddProductRequest(rfid=12345, productName=Sample Product, productPrice=100)";
+        assertEquals(expectedToString, addProductRequest.toString());
+    }
+
+    @Test
+    void testEqualsAndHashCode() {
+        AddProductRequest addProductRequest1 = new AddProductRequest(12345, "Sample Product", 100);
+        AddProductRequest addProductRequest2 = new AddProductRequest(12345, "Sample Product", 100);
+
+        assertEquals(addProductRequest1, addProductRequest2);
+        assertEquals(addProductRequest1.hashCode(), addProductRequest2.hashCode());
+    }
+
 }
