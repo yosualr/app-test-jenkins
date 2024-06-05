@@ -40,7 +40,7 @@ pipeline {
         stage('Docker Push') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhub-password')]) {
+                    withCredentials([string(credentialsId: 'dockerhub-pw', variable: 'dockerhub-password')]) {
                         bat ''' docker login -u yosualr -p "%dockerhub-password%" '''
                     }
                     bat 'docker push yosualr/xmart'
@@ -51,7 +51,7 @@ pipeline {
         stage ('Docker Run') {
             steps {
                 script {
-                    bat 'docker run -d --name xmart -p 5432:5432 --net="host" yosualr/xmart'
+                    bat 'docker run -d --name xmart -p 8099:8080 yosualr/xmart'
                     echo 'Docker Run Completed'
                 }
             }
